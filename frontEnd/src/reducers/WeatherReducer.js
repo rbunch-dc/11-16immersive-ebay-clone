@@ -1,5 +1,5 @@
 export default function (state = null, action){
-	// console.log(action.type)
+	console.log(action.type)
 	switch(action.type){
 	case "getWeather":
 		console.log(action.payload);
