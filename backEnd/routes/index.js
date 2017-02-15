@@ -23,4 +23,9 @@ router.get('/getHomeAuctions', function(req, res, next) {
 	});
 });
 
+// Make a register post route to handle registration!
+router.post('/register', (req, res, next)=>{
+	res.json(req.body)
+});
+
 module.exports = router;

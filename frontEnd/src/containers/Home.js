@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 // import actions
-import GetHomeAction from '../actions/GetHomeAction'
+import GetHomeAction from '../actions/GetHomeAction';
+import Auction from '../components/Auction';
 
 class Home extends Component {
 
@@ -15,7 +16,7 @@ class Home extends Component {
 		console.log(this.props.homeData);
 		var homeAuctions = [];
 		this.props.homeData.map((auction, index)=>{
-			homeAuctions.push(<li>{auction.starting_bid}</li>);
+			homeAuctions.push(<Auction key={index} item={auction} />);
 		});
 		return(
 			<div>
