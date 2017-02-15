@@ -1,0 +1,57 @@
+.App {
+  text-align: center;
+  font-family: Julius Sans One, Josefin Sans, Sans Serif;
+}
+
+.App-logo {
+  animation: globe-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.header{
+  background-color: #E6E6FA;
+  text-align: left;  position: fixed;
+  z-index: 9999
+}
+
+.category-header{
+  margin-top: 90px;
+}
+
+.navbar{
+  margin-bottom: -25px;
+}
+
+#searchbar{
+  width: 250px;
+}
+
+.best-examples, .shop-by-region-examples{
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+
+.best-examples div, .shop-by-region-examples div, .shop-by-category-examples div{
+  margin: auto;
+  border: 1px dashed #5c5c64;
+  height:  300px;
+  background-color: #f5f5fd;
+}
+
+
+
+
+
+
+@keyframes globe-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
