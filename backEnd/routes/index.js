@@ -25,7 +25,23 @@ router.get('/getHomeAuctions', function(req, res, next) {
 
 // Make a register post route to handle registration!
 router.post('/register', (req, res, next)=>{
-	res.json(req.body)
+	checkDupeUserQuery = "SELECT * FROM users WHERE username = ?";
+	connection.query(checkDupeUserQuery,[req.body.username],(error,results,fields)=>{
+		if(results.length === 0){
+			// Go ahead and register this person
+			var insertUserQuery = "INSERT INTO users (username, password) VALUES " +
+				"(?, ?)";
+			connection.query(insertUserQuery,[req.body.username,req.body.password],(error2,results2)=>{
+				res.json({
+					msg:"userInserted"
+				});
+			});
+		}else{
+			res.json({
+				msg: "userNameTaken"
+			})
+		}
+	})
 });
 
 module.exports = router;

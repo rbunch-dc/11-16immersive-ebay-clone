@@ -9,7 +9,7 @@ const rootReducer = combineReducers({
 	weather: WeatherReducer,
 	movie: MovieReducer,
 	home: GetHomeReducer,
-	login: RegisterReducer
+	register: RegisterReducer
 });
 
 export default rootReducer; 
