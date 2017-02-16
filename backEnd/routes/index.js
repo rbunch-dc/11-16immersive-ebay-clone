@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var config = require ('../config/config');
 var mysql = require('mysql');
-// var randtoken = require('rand-token');
+var randtoken = require('rand-token');
 var connection = mysql.createConnection({
 	host: config.host,
 	user: config.user,
@@ -63,7 +63,7 @@ router.post('/register', (req, res, next)=>{
 router.post('/login', (req, res, next)=>{
 	var username = req.body.username;
 	var password = req.body.password;
-	var findUserQuery = "SELECT * FROM users WHERE username = ?";
+	var findUserQuery = "SELECT password FROM users WHERE username = ?";
 	connection.query(findUserQuery,[req.body.username], (error, results, fields)=>{
 		if(results.length === 0){
 			// This is not a valid username!!!
@@ -76,10 +76,24 @@ router.post('/login', (req, res, next)=>{
 			console.log("######################")
 			console.log(checkHash);
 			console.log("######################")
-			res.json({
-				msg: "foundUser"
-			})
-
+			if(checkHash === false){
+				res.json({
+					msg: "badPassword"
+				})
+			}else{
+				// We have a match on username, and the hash password checks out
+				// this is teh droid we're looking for
+				var token = randtoken.uid(40);
+				insertToken = "INSERT INTO users (token, token_exp) VALUES " +
+					"(?, NOW())";
+				connection.query(insertToken,[token], (error, results)=>{
+					console.log(token);
+					res.json({
+						msg: "foundUser",
+						token: token
+					});
+				});
+			}
 		}
 	});
 	// res.json(req.body);

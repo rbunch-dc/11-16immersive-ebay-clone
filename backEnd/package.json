@@ -16,6 +16,7 @@
     "jsonwebtoken": "^7.3.0",
     "morgan": "~1.7.0",
     "mysql": "^2.13.0",
+    "rand-token": "^0.3.0",
     "serve-favicon": "~2.3.0"
   }
 }

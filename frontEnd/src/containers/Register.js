@@ -9,9 +9,6 @@ class Register extends Component {
 	constructor(props) {
 		super(props);
 		this.registrationSubmit = this.registrationSubmit.bind(this);
-		this.state = {
-			registrationResponse: ""
-		}
 	}
 	registrationSubmit(event){
 		event.preventDefault();

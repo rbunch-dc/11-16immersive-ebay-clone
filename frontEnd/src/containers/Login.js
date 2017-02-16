@@ -2,13 +2,11 @@ import React, {Component} from 'react';
 import LoginAction from '../actions/LoginAction';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import {browserHistory} from 'react-router';
 
 class Login extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			loginResponse: ""
-		}
 		this.loginSubmit = this.loginSubmit.bind(this);
 	}
 
@@ -21,9 +19,20 @@ class Login extends Component {
 	}
 
 	render(){
+		console.log(this.props.loginResponse);
+		if(this.props.loginResponse.msg === "badUsername"){
+			var message = "That username does not exist";
+		}else if(this.props.loginResponse.msg === "badPassword"){
+			var message = "That password does not match what we have on file!";
+		}else if(this.props.loginResponse.msg == "foundUser"){
+			browserHistory.push('/');
+		}else{
+			var message = "";
+		}
 		return(
 			<div>
 				<h1>Login Page</h1>
+				<h1>{message}</h1>
 				<form onSubmit={this.loginSubmit}>
 					<input type="text" placeholder="Username" />
 					<input type="password" placeholder="Password" />
