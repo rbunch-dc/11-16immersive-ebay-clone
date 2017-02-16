@@ -20,14 +20,15 @@ class Login extends Component {
 
 	render(){
 		console.log(this.props.loginResponse);
+		var message = ""
 		if(this.props.loginResponse.msg === "badUsername"){
-			var message = "That username does not exist";
+			message = "That username does not exist";
 		}else if(this.props.loginResponse.msg === "badPassword"){
-			var message = "That password does not match what we have on file!";
-		}else if(this.props.loginResponse.msg == "foundUser"){
+			message = "That password does not match what we have on file!";
+		}else if(this.props.loginResponse.msg === "foundUser"){
 			browserHistory.push('/');
 		}else{
-			var message = "";
+			message = "";
 		}
 		return(
 			<div>

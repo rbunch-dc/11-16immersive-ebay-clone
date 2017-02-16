@@ -5,6 +5,8 @@ export default function(state = [], action){
 			// console.log("I'm the register reducer, and some action called REGISTER!!!");
 			// console.log(action.payload);
 			return action.payload
+		// Same as an else...
+		default:
+			return state;
 	}
-	return state;
 }

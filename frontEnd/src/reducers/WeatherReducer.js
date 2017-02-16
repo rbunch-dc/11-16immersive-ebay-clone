@@ -1,5 +1,5 @@
 export default function (state = null, action){
-	console.log(action.type)
+	// console.log(action.type)
 	switch(action.type){
 	case "getWeather":
 		console.log(action.payload);
@@ -8,6 +8,8 @@ export default function (state = null, action){
 	case "somethingElse":
 		console.log("Shouldn't see this")
 		break;
+		// Same as an else...
+	default:
+		return state;
 	}
-	return state;
 }

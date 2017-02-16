@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 
 class Auction extends Component{
 	render(){
-		console.log(this.props.item);
+		// console.log(this.props.item);
 		var auctionItem = this.props.item
 		return(
 			<div>
@@ -11,7 +11,7 @@ class Auction extends Component{
 					{auctionItem.title}
 				</div>
 				<div className="auctionImage">
-					<img src={auctionItem.url} />
+					<img src={auctionItem.url} alt="" />
 				</div>				
 			</div>
 

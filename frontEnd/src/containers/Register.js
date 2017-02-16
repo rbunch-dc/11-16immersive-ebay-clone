@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import RegisterAction from '../actions/RegisterAction';
-import formSerialize from 'form-serialize';
-
 
 class Register extends Component {
 	constructor(props) {
@@ -28,12 +26,13 @@ class Register extends Component {
 
 	render(){
 		// console.log(this.props.registerResponse.msg)
+		var message = "";
 		if(this.props.registerResponse.msg === "userNameTaken"){
-			var message = "User Name is Taken";
+			message = "User Name is Taken";
 		}else if(this.props.registerResponse.msg === "userInserted"){
-			var message = "User was inserted!";
+			message = "User was inserted!";
 		}else{
-			var message = "";
+			message = "";
 		}
 		return(
 			<div>

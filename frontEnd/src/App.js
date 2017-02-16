@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
-import FirstView from './FirstView'; 
-import SearchBar from './containers/SearchBar';
-
+import NavBar from './containers/NavBar';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
+      	<NavBar />
         {this.props.children}
       </div>
     );
