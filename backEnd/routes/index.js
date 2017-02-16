@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var config = require ('../config/config');
 var mysql = require('mysql');
+// var randtoken = require('rand-token');
 var connection = mysql.createConnection({
 	host: config.host,
 	user: config.user,
@@ -57,6 +58,31 @@ router.post('/register', (req, res, next)=>{
 			})
 		}
 	})
+});
+
+router.post('/login', (req, res, next)=>{
+	var username = req.body.username;
+	var password = req.body.password;
+	var findUserQuery = "SELECT * FROM users WHERE username = ?";
+	connection.query(findUserQuery,[req.body.username], (error, results, fields)=>{
+		if(results.length === 0){
+			// This is not a valid username!!!
+			res.json({
+				msg: "badUsername"
+			});
+		}else{
+			// this is a valid username (we know because results.length > 0);
+			checkHash = bcrypt.compareSync(password, results[0].password);
+			console.log("######################")
+			console.log(checkHash);
+			console.log("######################")
+			res.json({
+				msg: "foundUser"
+			})
+
+		}
+	});
+	// res.json(req.body);
 });
 
 module.exports = router;
