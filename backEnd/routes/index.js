@@ -84,9 +84,9 @@ router.post('/login', (req, res, next)=>{
 				// We have a match on username, and the hash password checks out
 				// this is teh droid we're looking for
 				var token = randtoken.uid(40);
-				insertToken = "INSERT INTO users (token, token_exp) VALUES " +
-					"(?, NOW())";
-				connection.query(insertToken,[token], (error, results)=>{
+				insertToken = "UPDATE users SET token=?, token_exp=DATE_ADD(NOW(), INTERVAL 1 HOUR) "+
+					"WHERE username=?";
+				connection.query(insertToken,[token, username], (error, results)=>{
 					console.log(token);
 					res.json({
 						msg: "foundUser",
