@@ -10,9 +10,24 @@ var connection = mysql.createConnection({
 });
 connection.connect();
 
+var bcrypt = require('bcrypt-nodejs');
+
+// var expressJWT = require('express-jwt');
+// var jwt = require('jsonwebtoken');
+// var protectMe = expressJWT({secret: 'dc4life'}) 
+
+// var hashedPassword = bcrypt.hashSync("x");
+// console.log(hashedPassword);
+// var checkHash = bcrypt.compareSync("x", hashedPassword);
+// console.log(checkHash);
+// checkHash = bcrypt.compareSync("bacon", hashedPassword);
+// console.log(checkHash);
+
 
 /* GET top 10 auctions */
 router.get('/getHomeAuctions', function(req, res, next) {
+	// var myToken = jwt.sign({username: "Joe"},'dc4life');
+	// res.json(myToken);
 	var auctionsQuery = 
 		"SELECT * FROM auctions " + 
 		"INNER JOIN images ON images.auction_id = auctions.id "
@@ -31,7 +46,7 @@ router.post('/register', (req, res, next)=>{
 			// Go ahead and register this person
 			var insertUserQuery = "INSERT INTO users (username, password) VALUES " +
 				"(?, ?)";
-			connection.query(insertUserQuery,[req.body.username,req.body.password],(error2,results2)=>{
+			connection.query(insertUserQuery,[req.body.username,bcrypt.hashSync(req.body.password)],(error2,results2)=>{
 				res.json({
 					msg:"userInserted"
 				});
