@@ -39,6 +39,15 @@ router.get('/getHomeAuctions', function(req, res, next) {
 	});
 });
 
+// Get a single auction's data based on the ID in teh URL
+router.get('/getAuctionItem/:auctionId', (req, res, next)=>{
+	var theAuctionId = req.params.auctionId;
+	var getAuctionQuery = "SELECT * FROM auctions WHERE id = ?";
+	connection.query(getAuctionQuery,[theAuctionId],(error, results, fields)=>{
+		res.json(results);
+	});
+});
+
 // Make a register post route to handle registration!
 router.post('/register', (req, res, next)=>{
 	checkDupeUserQuery = "SELECT * FROM users WHERE username = ?";
@@ -98,5 +107,9 @@ router.post('/login', (req, res, next)=>{
 	});
 	// res.json(req.body);
 });
+
+router.post('/submitBid', (req, res, next)=>{
+	res.json(req.body);
+})
 
 module.exports = router;
