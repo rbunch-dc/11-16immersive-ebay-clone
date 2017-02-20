@@ -3,6 +3,7 @@ var router = express.Router();
 var config = require ('../config/config');
 var mysql = require('mysql');
 var randtoken = require('rand-token');
+var stripe = require("stripe")("sk_test_kRmqYSFSriTO5n2dj7CrLBRI");
 // Chnage over to pool
 var pool = mysql.createPool({
 	host: config.host,
@@ -132,7 +133,6 @@ router.post('/submitBid', (req, res, next)=>{
 	pool.getConnection((err, connection)=> {
 		connection.query(selectQuery,[req.body.auctionItemId],(error,results,fields)=>{
 			// res.json(results[0]);
-
 			if((req.body.bidAmount < results[0].current_bid) 
 				|| (req.body.bidAmount < results[0].starting_bid)){
 				res.json({msg: "bidToLow"});
@@ -150,21 +150,22 @@ router.post('/submitBid', (req, res, next)=>{
 				var getUserId = "SELECT id FROM users WHERE token = ?";
 				connection.query(getUserId,[req.body.userToken],(error2,results2)=>{
 					if(results2.length > 0){ //Token in the DB, valid token. Move forward
-						var updateAuctionsQuery = "UPDATE auctions SET high_bidder_id=?, current_bid=?"+
-							"WHERE id = ?";
-						connection.query(updateAuctionsQuery,[results2[0].id,req.body.bidAmount,req.body.auctionItemId],(errors3,results3,fields3)=>{
+						var updateAuctionsQuery = "UPDATE auctions SET high_bidder_id=?, current_bid=? WHERE id = ?";
+						console.log(updateAuctionsQuery);			
+						connection.query(updateAuctionsQuery,[results2[0].id,req.body.bidAmount,req.body.auctionItemId],(errors3,results3)=>{
 							if(error)throw error;
+							console.log(results3)
 							res.json({
 								msg: "bidAccepted",
 								newBid: req.body.bidAmount
-							})
-						})
+							});
+						});
 					}else{
 						res.json({
 							msg: "badToken"
 						})
 					}
-				})
+				});
 			}
 		});
 		connection.release()
@@ -173,6 +174,28 @@ router.post('/submitBid', (req, res, next)=>{
 		// auctionItemId
 		// userToken
 	// res.json(req.body);
+});
+
+router.post('/stripe', (req, res, next)=>{
+	// run a query against req.body.token to make sure this person is logged int
+
+
+	// res.json(req.body);
+	stripe.charges.create({
+	  amount: req.body.amount,
+	  currency: "usd",
+	  source: req.body.stripeToken, // obtained with Stripe.js
+	  description: "Charge for anthony.thomas@example.com"
+	}, function(err, charge) {
+	  // asynchronously called
+	  if(err) {
+	  	res.json({msg:"errorProcessing"})
+	  }else{
+	  	res.json({
+	  		msg:"paymentSuccess"
+	  	})
+	  }
+	});
 });
 
 module.exports = router;

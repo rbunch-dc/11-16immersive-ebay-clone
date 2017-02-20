@@ -5,11 +5,16 @@ import {bindActionCreators} from 'redux';
 import GetAuctionDetail from '../actions/GetAuctionDetail';
 import SubmitBidAction from '../actions/SubmitBidAction';
 // import Auction from '../components/Auction';
+import $ from 'jquery';
 
 class AuctionItem extends Component {
 	constructor(props) {
 		super(props);
 		this.submitBid = this.submitBid.bind(this);
+	}
+
+	componentWillUpdate(nextProps, nextState) {
+		console.log(nextProps);
 	}
 
 	componentDidMount() {
@@ -20,7 +25,7 @@ class AuctionItem extends Component {
 	submitBid(event){
 		event.preventDefault();
 		console.log(this.props.userToken);
-		if(this.props.userToken === undefined){
+		if(localStorage.getItem("token") === undefined){
 			// route user to login
 		}else{
 			var bidAmount = Number(event.target[0].value);
@@ -32,20 +37,57 @@ class AuctionItem extends Component {
 				console.log("Bid Too Low");
 			}else{
 				console.log("Submit to Express");
-				this.props.submitBidToExpress(bidAmount, auctionItem.id, this.props.userToken)
+				this.props.submitBidToExpress(bidAmount, auctionItem.id, localStorage.getItem("token"))
 			}
 		}
 	}
 
+	makePayment(){
+		console.log("Test");
+		var handler = window.StripeCheckout.configure({
+			key: 'pk_test_K9L17worNm0z7lHpdssTpwqr',
+			locale: 'auto',
+			token: function(stripeToken){
+				console.log(stripeToken);
+				var theData = {
+					amount: 10 * 100,
+					stripeToken: stripeToken.id,
+					token: localStorage.getItem('token')
+				}
+				$.ajax({
+					method: 'POST',
+					url: "http://localhost:3000/stripe",
+					data: theData
+				}).done((data)=>{
+					console.log("Express response... and teh response is...")
+					console.log(data);
+				});
+			}
+		});
+		console.log(handler);
+		handler.open({
+			name: "Buy stuff from my auction site",
+			description: "Pay for your auction",
+			amount: 10 * 100,
+			image: 'https://www.base64-image.de/build/img/mr-base64-482fa1f767.png'
+		})
+	}
+
 	render(){
 		// this.props.getHomeData();
-		// console.log(this.props.homeData);
+		// console.log(this.props.bid);
+		var message = "";
 		if(this.props.auctionItemDetail.length === 0){
 			return (<h1>Loading Auction...</h1>);
 		}
+
 		var auctionItem = this.props.auctionItemDetail[0];
 		if(auctionItem.current_bid === null){
 			auctionItem.current_bid = "No Bids Yet";
+		}
+		if(this.props.bid.msg == "bidAccepted"){
+			auctionItem.current_bid = this.props.bid.newBid;
+			auctionItem.high_bidder_id = "You are the high bidder!"
 		}
 		return(
 			<div className="auction-detail-page">
@@ -58,7 +100,7 @@ class AuctionItem extends Component {
 					<input type="number" placeholder="Enter your bid" />
 					<button type="submit">Bid</button>
 				</form>
-				
+				<button className="btn btn-primary" onClick={this.makePayment}>Pay my auction</button>
 			</div>
 		);
 	}
@@ -67,7 +109,8 @@ class AuctionItem extends Component {
 function mapStateToProps(state){
 	return{
 		auctionItemDetail: state.auctionItem,
-		userToken: state.login.token
+		userToken: state.login.token,
+		bid: state.bid
 	}
 }
 

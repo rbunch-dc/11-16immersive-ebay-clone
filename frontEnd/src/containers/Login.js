@@ -10,12 +10,16 @@ class Login extends Component {
 		this.loginSubmit = this.loginSubmit.bind(this);
 	}
 
+	componentWillUpdate(nextProps, nextState) {
+		// could check nextProps for token here if you wish
+	}
+
 	loginSubmit(event){
 		event.preventDefault();
 		this.props.loginAction({
 			username: event.target[0].value,
 			password: event.target[1].value
-		});		
+		});
 	}
 
 	render(){
